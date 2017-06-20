@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<body>
+		<style>
+			.button {
+				height: 50px;
+				width: 50px;
+			}
+		</style>
+		
+		<script>
+			var button;
+			var rows = 9;
+			var cols = 9;
+			var mines = 10;
+			var board = [];
+			var offsets = [[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];
+			
+			for (var x = 0; x < cols; x++) {
+				board = [];
+				for (var y = 0; y < rows; y++) {
+					button = "<button id='" + x + "," + y + "' onclick='buttonPressed(" + x + "," + y + ")' class='button' value=''></button>";
+					document.write(button);
+				}
+				document.write("<br>");
+			}
+			
+			fillBoard();
+			transparent();
+			
+			function transparent() {
+				for (var x = 0; x < cols; x++) {
+					for (var y = 0; y < rows; y++) {
+						document.getElementById(x + "," + y).innerHTML = document.getElementById(x + "," + y).value;
+					}
+				}
+			}
+			
+			function fillBoard() {
+				var count = mines;
+				var r1, r2;
+				while (count > 0) {
+					r1 = parseInt(Math.random()*9);
+					r2 = parseInt(Math.random()*9);
+					if (document.getElementById(r1 + "," + r2).value != "Mine") {
+						document.getElementById(r1 + "," + r2).value = "Mine"
+						count--;
+					}
+				}
+				
+				var count;
+				for (var x = 0; x < cols; x++) {
+					for (var y = 0; y < rows; y++) {
+						if (document.getElementById(x + "," + y).value != "Mine") {
+							count = 0;
+							for (var i = 0; i < offsets.length; i++) {
+								newX = x + offsets[i][0];
+								newY = y + offsets[i][1];
+								if (newX >= 0 && newX < cols && newY >= 0 && newY < rows && document.getElementById(newX + "," + newY).value == "Mine")
+									count++;
+							}
+							document.getElementById(x + "," + y).value = count;
+						}
+					}
+				}
+			}
+			
+			function buttonPressed(x,y) {
+				if (document.getElementById(x + "," + y).value == "Mine")
+					alert("You Lose!");
+			}
+		</script>
+	</body>
+</html>
